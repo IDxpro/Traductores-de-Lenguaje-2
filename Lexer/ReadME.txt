@@ -1,4 +1,4 @@
-Importaciones y Definiciones:
+# Importaciones y Definiciones:
 Importamos las bibliotecas necesarias de Tkinter para crear la interfaz gráfica
 (tk, filedialog, messagebox).
 Importamos el namedtuple de la biblioteca collections para definir la estructura
