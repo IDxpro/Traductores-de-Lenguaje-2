@@ -14,8 +14,16 @@ void TablaSimbolos::agrega(DefVar *defVar) {
     ElementoTabla *elem;
 
     while (p != nullptr) {
-        elem = new Variable(tipo, p->simbolo, Nodo::ambito);
-        agrega(elem);
+        if (varLocalDefinida(p->simbolo, Nodo::ambito)) {
+            // Agregar error a la lista de errores
+            Nodo::tablaSimbolos->listaErrores->push_back("Error: variable local \"" + p->simbolo + "\" redefinida");
+        } else if (varGlobalDefinida(p->simbolo)) {
+            // Agregar error a la lista de errores
+            Nodo::tablaSimbolos->listaErrores->push_back("Error: variable global \"" + p->simbolo + "\" redefinida");
+        } else {
+            elem = new Variable(tipo, p->simbolo, Nodo::ambito);
+            agrega(elem);
+        }
         p = p->sig; // Avanzamos a la siguiente variable en la lista
     }
 }
