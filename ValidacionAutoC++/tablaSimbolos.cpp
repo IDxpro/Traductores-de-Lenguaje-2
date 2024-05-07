@@ -3,8 +3,15 @@
 
 
 void TablaSimbolos::agrega(DefVar *defVar) {
-    ElementoTabla *elemento = new ElementoTabla(defVar->nombre, defVar);
-    agrega(elemento);
+    char tipo = defVar->tipo->dimeTipo();
+    Identificador *p = defVar->listaVar;
+    ElementoTabla *elem;
+
+    while (p != nullptr) {
+        elem = new Variable(tipo, p->simbolo, Nodo::ambito);
+        agrega(elem);
+        p = p->sig; // Avanzamos a la siguiente variable en la lista
+    }
 }
 
 void TablaSimbolos::agrega(DefFunc *defFunc) {
