@@ -8,6 +8,7 @@ protected:
 		list <string> listaErrores;
 		Nodo *arbol;
 public:
+	static TablaSimbolos *tablaSimbolos;
 
 
 	void muestraErrores(){
@@ -21,6 +22,18 @@ public:
 			cout << cad << endl;
 		}
 
+	}
+
+	Semantico(){
+	Nodo::tablaSimbolos= tablaSimbolos= new
+	TablaSimbolos(&listaErrores);
+	}
+	
+	void analiza(Nodo *arbol){
+	this->arbol= arbol;
+	arbol->validaTipos();
+	tablaSimbolos->muestra();
+	muestraErrores();
 	}
 
 	bool existenErrores(){
