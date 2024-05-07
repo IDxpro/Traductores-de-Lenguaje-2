@@ -44,6 +44,12 @@ public:
 		muestraSangria();
 		cout << "<Tipo> " << simbolo << endl;
 	}
+	char dimeTipo() {
+	if ( simbolo.compare("int") == 0) return 'i';
+	if ( simbolo.compare("float") == 0) return 'f';
+	if ( simbolo.compare("string") == 0) return 's';
+	if ( simbolo.compare("void") == 0) return 'v';
+	}
 
 
 
