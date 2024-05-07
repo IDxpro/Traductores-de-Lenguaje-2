@@ -161,3 +161,15 @@ void TablaSimbolos::buscaFuncion(string simbolo){
 
 }
 
+
+void Suma::validaTipos() {
+    izq->validaTipos();
+    der->validaTipos();
+
+    if (izq->tipoDato == 'i' && izq->tipoDato == der->tipoDato) {
+        tipoDato = 'i'; // Si ambos operandos son enteros, la suma es entera
+    } else {
+        // Agregar error a la lista de errores
+        Nodo::tablaSimbolos->listaErrores->push_back("Error: tipos incompatibles en la suma");
+    }
+}
