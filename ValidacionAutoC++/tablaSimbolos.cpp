@@ -2,6 +2,12 @@
 #include "arbolSintactico.h"
 
 
+void DefVar::validaTipos() {
+    tipoDato = tipo->dimeTipo();
+    Nodo::tablaSimbolos->agrega(this);
+}
+
+
 void TablaSimbolos::agrega(DefVar *defVar) {
     char tipo = defVar->tipo->dimeTipo();
     Identificador *p = defVar->listaVar;
