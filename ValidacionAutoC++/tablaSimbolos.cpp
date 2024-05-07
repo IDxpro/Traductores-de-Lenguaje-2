@@ -2,16 +2,21 @@
 #include "arbolSintactico.h"
 
 
-void TablaSimbolos::agrega( DefVar *defVar){	
-
+void TablaSimbolos::agrega(DefVar *defVar) {
+    ElementoTabla *elemento = new ElementoTabla(defVar->nombre, defVar);
+    agrega(elemento);
 }
 
-void TablaSimbolos::agrega( Parametro *parametros){
+void TablaSimbolos::agrega(DefFunc *defFunc) {
+    ElementoTabla *elemento = new ElementoTabla(defFunc->nombre, defFunc);
+    agrega(elemento);
 }
 
-
-void TablaSimbolos::agrega( DefFunc *defFunc){
+void TablaSimbolos::agrega(Parametro *parametros) {
+    ElementoTabla *elemento = new ElementoTabla(parametros->nombre, parametros);
+    agrega(elemento);
 }
+
 
 int TablaSimbolos::dispersion(string simbolo){
 	unsigned int h=0, g;
