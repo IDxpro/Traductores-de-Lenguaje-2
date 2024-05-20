@@ -1,246 +1,61 @@
-import re
+from ply import lex
 
-class Token:
-   def __init__(self, type, value):
-       self.type = type
-       self.value = value
+# Definición de tokens
+tokens = (
+    'ID', 'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'LPAREN', 'RPAREN',
+    'SEMICOLON', 'ASSIGN', 'PRINT', 'INT', 'RETURN', 'LBRACES', 'RBRACES'
+)
 
-class Lexer:
-   def __init__(self, text):
-       self.text = text
-       self.pos = 0
-       self.current_char = self.text[self.pos]
+# Reglas de expresiones regulares para tokens simples
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+t_DIVIDE = r'/'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_LBRACES = r'\{'
+t_RBRACES = r'\}'
+t_SEMICOLON = r';'
+t_ASSIGN = r'='
+t_PRINT = r'printf'
+t_ignore = ' \t'
+t_INT = r'int'
+t_RETURN = r'return'
 
-   def error(self):
-       raise Exception("Invalid character")
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    if t.value == 'int' or t.value == 'float':
+        t.type = t.value.upper()  # Palabras clave
+    return t
 
-   def advance(self):
-       self.pos += 1
-       if self.pos < len(self.text):
-           self.current_char = self.text[self.pos]
-       else:
-           self.current_char = None
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
 
-   def skip_whitespace(self):
-       while self.current_char is not None and self.current_char.isspace():
-           self.advance()
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
-   def get_identifier(self):
-       result = ''
-       while self.current_char is not None and (self.current_char.isalpha() or self.current_char.isdigit()):
-           result += self.current_char
-           self.advance()
+def t_error(t):
+    print("Carácter ilegal '%s'" % t.value[0])
+    t.lexer.skip(1)
 
-       if result in ["if", "else", "while", "for", "return", "main", "int", "char", "real"]:  # Check for keywords
-           return Token(result.upper(), result)  # Return with uppercase type
-       else:
-           return Token("IDENTIFIER", result)
+# Construcción del lexer
+lexer = lex.lex()
 
-   def get_real(self):
-        integer_part = ''
-        decimal_part = ''
-        
-        while self.current_char is not None and self.current_char.isdigit():
-            integer_part += self.current_char
-            self.advance()
-        
-        if self.current_char == '.':
-            self.advance()
-            
-            while self.current_char is not None and self.current_char.isdigit():
-                decimal_part += self.current_char
-                self.advance()
+class LexerWrapper:
+    def __init__(self, code):
+        self.lexer = lexer
+        self.lexer.input(code)
+        self.tokens = []
 
-        if integer_part and decimal_part:
-            return float(f"{integer_part}.{decimal_part}")
-        elif integer_part:
-            return int(f"{integer_part}")
-        else:
-            self.error()          
-        
-   def OPsuma(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "+" or self.current_char == "-"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OPmultiplicacion(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "*" or self.current_char == "/"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OPRelac(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "<" or self.current_char == "<="):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpParentesis(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "(" or self.current_char == ")"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpCorchetes(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "{" or self.current_char == "}"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OPNot(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "!"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OPAnd(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "&"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OPOr(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "|"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpIgualdad(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "="):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpPuntoComa(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == ";"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpIf(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "If"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpWhile(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "While"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpReturn(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "Return"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpElse(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "Else"):
-            result += self.current_char
-            self.advance()
-        return result
-    
-   def OpFloat(self):
-        result = ''
-        while self.current_char is not None and (self.current_char == "float"):
-            result += self.current_char
-            self.advance()
-        return result
+        # Store all tokens
+        while True:
+            tok = self.lexer.token()
+            if not tok:
+                break
+            self.tokens.append(tok)
 
-   def get_next_token(self):
-        while self.current_char is not None:
-            if self.current_char.isspace():
-                self.skip_whitespace()
-                continue
-
-            if self.current_char.isalpha():
-               return self.get_identifier() #addifelse
-
-            if self.current_char.isdigit():
-                return Token("REAL", self.get_real()) #addifelse for a dot
-            
-            if self.current_char == "+" or self.current_char == "-":
-                return Token("OpSuma", self.OPsuma())
-            
-            if self.current_char == "*" or self.current_char == "/":
-                return Token("OpMultiplicacion", self.OPmultiplicacion())
-            
-            if self.current_char == "<" or self.current_char == ">": #addifelse
-                return Token("OpRelac", self.OPRelac())
-            
-            if self.current_char == "!":
-                return Token("OpNot", self.OPNot())
-            
-            if self.current_char == "&": 
-                return Token("OpAnd", self.OPAnd())
-            
-            if self.current_char == "|": 
-                return Token("OpOr", self.OPOr())
-            
-            if self.current_char == "=": 
-                return Token("OpIgualdad", self.OpIgualdad())
-            
-            if self.current_char == "(" or self.current_char == ")":
-                return Token("OpParentesis", self.OpParentesis())
-            
-            if self.current_char == "{" or self.current_char == "}":
-                return Token("OpCorchetes", self.OpCorchetes())
-            
-            if self.current_char == ";": 
-                return Token("OpPuntoComa", self.OpPuntoComa())
-            
-            if self.current_char == "if": 
-                return Token("OpIf", self.OpIf())
-            
-            if self.current_char == "while": 
-                return Token("OpWhile", self.OpWhile())
-            
-            if self.current_char == "return": 
-                return Token("OpReturn", self.OpReturn())
-            
-            if self.current_char == "else": 
-                return Token("OpElse", self.OpElse())
-            
-            if self.current_char == "int": 
-                return Token("OpInt", self.OpInt())
-            
-            if self.current_char == "float": 
-                return Token("OpFloat", self.OpFloat())
-
-            self.error()
-
-        return Token("EOF", None)
-
-# Example usage:
-text = """
-int main() {
-    int a = 10;
-    int b = 20;
-    int c = a + b;
-    return 0;
-}
-"""
-lexer = Lexer(text)
-
-while True:
-    token = lexer.get_next_token()
-    if token.type == "EOF":
-        break
-    print(f"Token: {token.type}, Value: {token.value}")
-    
+    def get_tokens(self):
+        return self.tokens
