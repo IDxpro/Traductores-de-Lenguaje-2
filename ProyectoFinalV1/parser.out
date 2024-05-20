@@ -1,0 +1,361 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    INT
+    LBRACES
+    RBRACES
+    RETURN
+
+Grammar
+
+Rule 0     S' -> statement
+Rule 1     statement -> ID ASSIGN expr SEMICOLON
+Rule 2     statement -> PRINT LPAREN expr RPAREN SEMICOLON
+Rule 3     expr -> expr PLUS expr
+Rule 4     expr -> expr MINUS expr
+Rule 5     expr -> expr TIMES expr
+Rule 6     expr -> expr DIVIDE expr
+Rule 7     expr -> NUMBER
+Rule 8     expr -> ID
+
+Terminals, with rules where they appear
+
+ASSIGN               : 1
+DIVIDE               : 6
+ID                   : 1 8
+INT                  : 
+LBRACES              : 
+LPAREN               : 2
+MINUS                : 4
+NUMBER               : 7
+PLUS                 : 3
+PRINT                : 2
+RBRACES              : 
+RETURN               : 
+RPAREN               : 2
+SEMICOLON            : 1 2
+TIMES                : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+expr                 : 1 2 3 3 4 4 5 5 6 6
+statement            : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . statement
+    (1) statement -> . ID ASSIGN expr SEMICOLON
+    (2) statement -> . PRINT LPAREN expr RPAREN SEMICOLON
+
+    ID              shift and go to state 2
+    PRINT           shift and go to state 3
+
+    statement                      shift and go to state 1
+
+state 1
+
+    (0) S' -> statement .
+
+
+
+state 2
+
+    (1) statement -> ID . ASSIGN expr SEMICOLON
+
+    ASSIGN          shift and go to state 4
+
+
+state 3
+
+    (2) statement -> PRINT . LPAREN expr RPAREN SEMICOLON
+
+    LPAREN          shift and go to state 5
+
+
+state 4
+
+    (1) statement -> ID ASSIGN . expr SEMICOLON
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 7
+
+state 5
+
+    (2) statement -> PRINT LPAREN . expr RPAREN SEMICOLON
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 9
+
+state 6
+
+    (8) expr -> ID .
+
+    SEMICOLON       reduce using rule 8 (expr -> ID .)
+    PLUS            reduce using rule 8 (expr -> ID .)
+    MINUS           reduce using rule 8 (expr -> ID .)
+    TIMES           reduce using rule 8 (expr -> ID .)
+    DIVIDE          reduce using rule 8 (expr -> ID .)
+    RPAREN          reduce using rule 8 (expr -> ID .)
+
+
+state 7
+
+    (1) statement -> ID ASSIGN expr . SEMICOLON
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+    SEMICOLON       shift and go to state 10
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+
+state 8
+
+    (7) expr -> NUMBER .
+
+    SEMICOLON       reduce using rule 7 (expr -> NUMBER .)
+    PLUS            reduce using rule 7 (expr -> NUMBER .)
+    MINUS           reduce using rule 7 (expr -> NUMBER .)
+    TIMES           reduce using rule 7 (expr -> NUMBER .)
+    DIVIDE          reduce using rule 7 (expr -> NUMBER .)
+    RPAREN          reduce using rule 7 (expr -> NUMBER .)
+
+
+state 9
+
+    (2) statement -> PRINT LPAREN expr . RPAREN SEMICOLON
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+    RPAREN          shift and go to state 15
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+
+state 10
+
+    (1) statement -> ID ASSIGN expr SEMICOLON .
+
+    $end            reduce using rule 1 (statement -> ID ASSIGN expr SEMICOLON .)
+
+
+state 11
+
+    (3) expr -> expr PLUS . expr
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 16
+
+state 12
+
+    (4) expr -> expr MINUS . expr
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 17
+
+state 13
+
+    (5) expr -> expr TIMES . expr
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 18
+
+state 14
+
+    (6) expr -> expr DIVIDE . expr
+    (3) expr -> . expr PLUS expr
+    (4) expr -> . expr MINUS expr
+    (5) expr -> . expr TIMES expr
+    (6) expr -> . expr DIVIDE expr
+    (7) expr -> . NUMBER
+    (8) expr -> . ID
+
+    NUMBER          shift and go to state 8
+    ID              shift and go to state 6
+
+    expr                           shift and go to state 19
+
+state 15
+
+    (2) statement -> PRINT LPAREN expr RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 20
+
+
+state 16
+
+    (3) expr -> expr PLUS expr .
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    SEMICOLON       reduce using rule 3 (expr -> expr PLUS expr .)
+    RPAREN          reduce using rule 3 (expr -> expr PLUS expr .)
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+  ! PLUS            [ reduce using rule 3 (expr -> expr PLUS expr .) ]
+  ! MINUS           [ reduce using rule 3 (expr -> expr PLUS expr .) ]
+  ! TIMES           [ reduce using rule 3 (expr -> expr PLUS expr .) ]
+  ! DIVIDE          [ reduce using rule 3 (expr -> expr PLUS expr .) ]
+
+
+state 17
+
+    (4) expr -> expr MINUS expr .
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    SEMICOLON       reduce using rule 4 (expr -> expr MINUS expr .)
+    RPAREN          reduce using rule 4 (expr -> expr MINUS expr .)
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+  ! PLUS            [ reduce using rule 4 (expr -> expr MINUS expr .) ]
+  ! MINUS           [ reduce using rule 4 (expr -> expr MINUS expr .) ]
+  ! TIMES           [ reduce using rule 4 (expr -> expr MINUS expr .) ]
+  ! DIVIDE          [ reduce using rule 4 (expr -> expr MINUS expr .) ]
+
+
+state 18
+
+    (5) expr -> expr TIMES expr .
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    SEMICOLON       reduce using rule 5 (expr -> expr TIMES expr .)
+    RPAREN          reduce using rule 5 (expr -> expr TIMES expr .)
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+  ! PLUS            [ reduce using rule 5 (expr -> expr TIMES expr .) ]
+  ! MINUS           [ reduce using rule 5 (expr -> expr TIMES expr .) ]
+  ! TIMES           [ reduce using rule 5 (expr -> expr TIMES expr .) ]
+  ! DIVIDE          [ reduce using rule 5 (expr -> expr TIMES expr .) ]
+
+
+state 19
+
+    (6) expr -> expr DIVIDE expr .
+    (3) expr -> expr . PLUS expr
+    (4) expr -> expr . MINUS expr
+    (5) expr -> expr . TIMES expr
+    (6) expr -> expr . DIVIDE expr
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    SEMICOLON       reduce using rule 6 (expr -> expr DIVIDE expr .)
+    RPAREN          reduce using rule 6 (expr -> expr DIVIDE expr .)
+    PLUS            shift and go to state 11
+    MINUS           shift and go to state 12
+    TIMES           shift and go to state 13
+    DIVIDE          shift and go to state 14
+
+  ! PLUS            [ reduce using rule 6 (expr -> expr DIVIDE expr .) ]
+  ! MINUS           [ reduce using rule 6 (expr -> expr DIVIDE expr .) ]
+  ! TIMES           [ reduce using rule 6 (expr -> expr DIVIDE expr .) ]
+  ! DIVIDE          [ reduce using rule 6 (expr -> expr DIVIDE expr .) ]
+
+
+state 20
+
+    (2) statement -> PRINT LPAREN expr RPAREN SEMICOLON .
+
+    $end            reduce using rule 2 (statement -> PRINT LPAREN expr RPAREN SEMICOLON .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for PLUS in state 16 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 16 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 16 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 16 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 17 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 17 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 17 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 17 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 18 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 18 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 18 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 18 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 19 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 19 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 19 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 19 resolved as shift
