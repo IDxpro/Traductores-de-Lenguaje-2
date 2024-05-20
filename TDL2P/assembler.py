@@ -1,27 +1,20 @@
-from ply import lex, yacc
-import re
 import c_to_assembly
-import lexer as lex_module
 import semantic
 import sintax
-import test
+import lexer as lex_module
+
 
 class Lexer:
     def __init__(self, code):
-        self.code = code
-        self.lexer = lex_module.Lexer(code)
-
-    def get_next_token(self):
-        return self.lexer.get_next_token()
+        self.lexer_wrapper = lex_module.LexerWrapper(code)
+        self.tokens = self.lexer_wrapper.get_tokens()
 
 class Parser:
-    def __init__(self, lexer):
-        self.lexer = lexer
-        self.current_token = self.lexer.get_next_token()
-        print(f"Initial token: {self.current_token}")
+    def __init__(self, tokens):
+        self.parser = sintax.Parser(tokens)
 
     def parse(self):
-        result = sintax.Parser(self.lexer).parse_program()
+        result = self.parser.parse_program()
         print("Parsing completed")
         return result
 
@@ -32,6 +25,7 @@ class SemanticAnalyzer:
     def analyze(self):
         semantic.analizador_semantico(self.parser)
 
+"""
 class IntermediateCodeGenerator:
     def __init__(self, parser):
         self.parser = parser
@@ -55,28 +49,40 @@ class CodeGenerator:
     def generate_machine_code(self):
         self.machine_code = c_to_assembly.generate_machine_code(self.intermediate_code)
         return self.machine_code
+"""
 
 # Uso del compilador
 source_code = """
 int main() {
     int a = 10;
     int b = 20;
-    int c = a + b;
-    return 0;
+    int c = a - b;
+    return = 0;
 }
 """
 
+source_code_python = """
+def main():
+  a = 10
+  b = 20
+  c = a - b
+  return 0
+"""
+
 lexer = Lexer(source_code)
-parser = Parser(lexer)
-semantic_analyzer = SemanticAnalyzer(parser)
-intermediate_code_generator = IntermediateCodeGenerator(parser)
-optimizer = Optimizer(intermediate_code_generator.intermediate_code)
-code_generator = CodeGenerator(optimizer.intermediate_code)
+parser = Parser(lexer.tokens)
+semantic_analyzer = SemanticAnalyzer(source_code)
+#intermediate_code_generator = IntermediateCodeGenerator(parser)
+#optimizer = Optimizer(intermediate_code_generator.intermediate_code)
+#code_generator = CodeGenerator(optimizer.intermediate_code)
+c_code = c_to_assembly.translate_to_assembler(source_code)
+
 
 # Ejecutar el compilador
 parser.parse()
 semantic_analyzer.analyze()
-intermediate_code_generator.generate_code()
-optimizer.optimize()
-machine_code = code_generator.generate_machine_code()
-print(machine_code)
+#intermediate_code_generator.generate_code()
+#optimizer.optimize()
+#machine_code = code_generator.generate_machine_code()
+print(c_code)
+print(semantic.creador_ast(source_code_python))
