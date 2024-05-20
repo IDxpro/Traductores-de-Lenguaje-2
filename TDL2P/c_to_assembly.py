@@ -1,95 +1,61 @@
-def translate_to_assembler(c_code):
-    assembly_code = []
-    c_to_assembler = {
-        'int': '',  # 'int' keyword will be handled separately
-        '+': 'add',
-        '-': 'sub',
-        '*': 'mul',
-        '/': 'div',
-        '=': 'mov',
-        'return': 'mov eax,',
-        'printf': 'call printf',
-        'scanf': 'call scanf'
-        # Add more mappings as needed
-    }
+from ply import lex
 
-    lines = c_code.strip().split('\n')
-    variable_declarations = {}
-    label_counter = 0
+# Definición de tokens
+tokens = (
+    'ID', 'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'LPAREN', 'RPAREN',
+    'SEMICOLON', 'ASSIGN', 'PRINT', 'INT', 'RETURN', 'LBRACES', 'RBRACES'
+)
 
-    for line in lines:
-        line = line.strip().strip(';')
-        if not line:
-            continue
-        tokens = line.split()
+# Reglas de expresiones regulares para tokens simples
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+t_DIVIDE = r'/'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_LBRACES = r'\{'
+t_RBRACES = r'\}'
+t_SEMICOLON = r';'
+t_ASSIGN = r'='
+t_PRINT = r'printf'
+t_ignore = ' \t'
+t_INT = r'int'
+t_RETURN = r'return'
 
-        # Handle main function
-        if line.startswith('int main'):
-            assembly_code.append('section .text')
-            assembly_code.append('global main')
-            assembly_code.append('main:')
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    if t.value == 'int' or t.value == 'float':
+        t.type = t.value.upper()  # Palabras clave
+    return t
 
-        # Handle variable declarations
-        elif tokens[0] == 'int':
-            var_name = tokens[1]
-            if len(tokens) > 3 and tokens[2] == '=':
-                var_value = tokens[3]
-                assembly_code.append(f'mov dword [{var_name}], {var_value}')
-            else:
-                assembly_code.append(f'mov dword [{var_name}], 0')
-            variable_declarations[var_name] = 0
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
 
-        # Handle arithmetic operations
-        elif '=' in tokens:
-            dest = tokens[0]
-            src = tokens[2:]
-            if len(src) == 1:
-                src = src[0]
-                assembly_code.append(f'mov eax, {src}')
-                assembly_code.append(f'mov [{dest}], eax')
-            else:
-                operand1 = src[0]
-                operator = src[1]
-                operand2 = src[2]
-                assembly_code.append(f'mov eax, {operand1}')
-                assembly_code.append(f'{c_to_assembler[operator]} eax, {operand2}')
-                assembly_code.append(f'mov [{dest}], eax')
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
-        # Handle return statement
-        elif tokens[0] == 'return':
-            ret_value = tokens[1]
-            assembly_code.append(f'mov eax, {ret_value}')
-            assembly_code.append('ret')
+def t_error(t):
+    print("Carácter ilegal '%s'" % t.value[0])
+    t.lexer.skip(1)
 
-    return '\n'.join(assembly_code)
+# Construcción del lexer
+lexer = lex.lex()
 
-def generate_intermediate_code(parser):
-    # Generate intermediate code from the parser
-    intermediate_code = []
-    # Implementation here
-    return intermediate_code
+class LexerWrapper:
+    def __init__(self, code):
+        self.lexer = lexer
+        self.lexer.input(code)
+        self.tokens = []
 
-def optimize_code(intermediate_code):
-    # Optimize the intermediate code
-    optimized_code = intermediate_code
-    # Implementation here
-    return optimized_code
+        # Store all tokens
+        while True:
+            tok = self.lexer.token()
+            if not tok:
+                break
+            self.tokens.append(tok)
 
-def generate_machine_code(intermediate_code):
-    # Generate machine code from the intermediate code
-    machine_code = []
-    # Implementation here
-    return machine_code
-
-# Example usage:
-c_code = """
-int main() {
-    int a = 10;
-    int b = 20;
-    int c = a + b;
-    return 0;
-}
-"""
-
-assembly_code = translate_to_assembler(c_code)
-print(assembly_code)
+    def get_tokens(self):
+        return self.tokens
