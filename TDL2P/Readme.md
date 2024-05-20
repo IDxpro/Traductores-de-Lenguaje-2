@@ -1,4 +1,4 @@
-# Readme.md
+# Assembler
 
 Este código en Python implementa un compilador básico que realiza el análisis léxico, sintáctico y semántico de un programa en lenguaje C y genera código ensamblador equivalente. A continuación, se explica el código por partes:
 
